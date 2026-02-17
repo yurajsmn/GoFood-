@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { Link,useNavigate } from "react-router-dom";
 function Login() {
+    let navigate=useNavigate()
   const [credentials, setcredentials] = useState({
     email: "",
     password: "",
@@ -7,7 +9,7 @@ function Login() {
   });
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:5000/api/creatuser", {
+    const response = await fetch("http://localhost:5000/api/loginuser", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -19,6 +21,9 @@ function Login() {
     });
     const json = await response.json();
     console.log(json);
+    if (json.success) {
+      navigate("/")
+    }
     if (!json.success) {
       alert("Enter valid credential");
     }
@@ -42,19 +47,6 @@ function Login() {
       >
         <div className="container" style={{ paddingTop: "20px" }}>
           <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="Name" style={{ color: "white" }}>
-                Name
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                name="name"
-                placeholder="Name"
-                value={credentials.name}
-                onChange={onChange}
-              />
-            </div>
             <div className="form-group">
               <label htmlFor="exampleInputEmail1" style={{ color: "white" }}>
                 Email address
@@ -84,25 +76,7 @@ function Login() {
                 onChange={onChange}
               />
             </div>
-
-            <div className="form-group">
-              <label
-                htmlFor="exampleInputGeolocation"
-                style={{ color: "white" }}
-              >
-                Geolocation
-              </label>
-              <input
-                type="Geolocation"
-                name="location"
-                value={credentials.location}
-                className="form-control"
-                id="exampleInputPassword1"
-                placeholder="Password"
-                onChange={onChange}
-              />
-            </div>
-            <div>
+              <div>
               <button type="submit" className="btn btn-primary">
                 Submit
               </button>
