@@ -1,11 +1,14 @@
-import React from 'react'
+import React from "react";
 
 function Card() {
   return (
     <div>
-       
       <div className="card mt-3" style={{ width: "18rem", maxHeight: "360px" }}>
-        <img src="..." className="card-img-top" alt="..." />
+        <img
+          src="/Image/ruth-georgiev-BBToZD2Juag-unsplash.jpg"
+          className="card-img-top"
+          alt="..."
+        />
         <div className="card-body">
           <h5 className="card-title">Card title</h5>
           <p className="card-text">This is some important text.</p>
@@ -26,8 +29,8 @@ function Card() {
             <div className="d-inline h-100 fs-5">Total price</div>
           </div>
         </div>
-        </div>
+      </div>
     </div>
-  )
+  );
 }
-export default Card
+export default Card;

@@ -6,6 +6,12 @@ const mongoDb = async () => {
   console.log("Connected to db");
   const fetched_data = mongoose.connection.db.collection("food_items");
   const data = await fetched_data.find({}).toArray();
-  console.log();
+  const foodCategory = mongoose.connection.db.collection("FoodCato");
+  const catdata = await foodCategory.find({}).toArray();
+
+  global.food_items = data;
+  global.foodCategory = catdata;
+
+  console.log("Global data loaded successfully");
 };
 module.exports = mongoDb;
