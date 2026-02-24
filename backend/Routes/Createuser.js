@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require('bcrypt');
-const jwt=require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const jwtSecret="mynameyuvrajsuman"
+const jwtSecret = "mynameyuvrajsuman";
 const { body, validationResult } = require("express-validator");
 router.post(
   "/creatuser",
@@ -13,9 +13,9 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    let pass=req.body.password;
-    const salt=await bcrypt.genSalt(10);
-    let secpass=await bcrypt.hash(pass,salt);
+    let pass = req.body.password;
+    const salt = await bcrypt.genSalt(10);
+    let secpass = await bcrypt.hash(pass, salt);
     try {
       await User.create({
         name: req.body.name,
@@ -51,21 +51,21 @@ router.post(
           .status(400)
           .json({ errors: "Try logging with correct credentials" });
       }
-      const pass=bcrypt.compare(req.body.password,useremail.password)
+      const pass = await bcrypt.compare(req.body.password, useremail.password);
       if (!pass) {
         return res
           .status(400)
           .json({ errors: "Try logging with correct credentials" });
       }
-      const data={
-        user:{
-            id:useRouteLoaderData.id
-        }
-      }
-      const authToken=jwt.sign(data,jwtSecret)
+      const data = {
+        user: {
+          id: useremail.id,
+        },
+      };
+      const authToken = jwt.sign(data, jwtSecret);
       return res.json({
         success: true,
-        authToken:authToken
+        authToken: authToken,
       });
     } catch (error) {
       console.log(error);
@@ -81,12 +81,10 @@ router.post("/getuserdata", async (req, res) => {
     else if (name) query.name = name;
     else if (location) query.location = location;
     else
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Please provide at least one search parameter",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Please provide at least one search parameter",
+      });
 
     const user = await User.findOne(query);
 

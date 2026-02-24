@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 function Login() {
-    let navigate=useNavigate()
+  let navigate = useNavigate();
   const [credentials, setcredentials] = useState({
     email: "",
     password: "",
-    
   });
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,9 +21,10 @@ function Login() {
     const json = await response.json();
     console.log(json);
     if (json.success) {
-        localStorage.setItem("authToken",json.authToken);
-        console.log(localStorage.getItem("authToken"))
-      navigate("/")
+      localStorage.setItem("authToken", json.authToken);
+       localStorage.setItem("userEmail",credentials.email);
+      console.log(localStorage.getItem("authToken"));
+      navigate("/");
     }
     if (!json.success) {
       alert("Enter valid credential");
@@ -36,7 +36,9 @@ function Login() {
       [event.target.name]: event.target.value,
     });
   };
-  return <><div
+  return (
+    <>
+      <div
         style={{
           backgroundColor: "gray",
           minHeight: "100vh",
@@ -78,18 +80,19 @@ function Login() {
                 onChange={onChange}
               />
             </div>
-              <div>
+            <div>
               <button type="submit" className="btn btn-primary">
                 Submit
               </button>
-              <Link to="/login" className="m-3 btn btn-danger">
-                Login
+              <Link to="/creatuser" className="m-3 btn btn-danger">
+                New User
               </Link>
             </div>
           </form>
         </div>
       </div>
-    </>;
+    </>
+  );
 }
 
 export default Login;

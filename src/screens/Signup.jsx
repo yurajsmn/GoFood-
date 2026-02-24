@@ -1,12 +1,46 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 export default function Signup() {
+  const navigate = useNavigate();
   const [credentials, setcredentials] = useState({
     name: "",
     email: "",
     password: "",
     location: "",
   });
+
+  useEffect(() => {
+    // Get user's location automatically when component mounts
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          try {
+            // Use reverse geocoding API to get address from coordinates
+            const response = await fetch(
+              `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`,
+            );
+            const data = await response.json();
+            const address = `${data.locality}, ${data.city}, ${data.principalSubdivision}`;
+            setcredentials((prev) => ({
+              ...prev,
+              location: address,
+            }));
+          } catch (error) {
+            console.error("Error getting address:", error);
+            setcredentials((prev) => ({
+              ...prev,
+              location: `${latitude}, ${longitude}`,
+            }));
+          }
+        },
+        (error) => {
+          console.error("Error getting location:", error);
+        },
+      );
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await fetch("http://localhost:5000/api/creatuser", {
@@ -23,7 +57,9 @@ export default function Signup() {
     });
     const json = await response.json();
     console.log(json);
-    if (!json.success) {
+    if (json.success) {
+      navigate("/login");
+    } else {
       alert("Enter valid credential");
     }
   };
@@ -96,16 +132,17 @@ export default function Signup() {
                 htmlFor="exampleInputGeolocation"
                 style={{ color: "white" }}
               >
-                Geolocation
+                Location
               </label>
               <input
-                type="Geolocation"
+                type="text"
                 name="location"
                 value={credentials.location}
                 className="form-control"
-                id="exampleInputPassword1"
-                placeholder="Password"
+                id="exampleInputGeolocation"
+                placeholder="Detecting location..."
                 onChange={onChange}
+                readOnly
               />
             </div>
             <div>

@@ -9,13 +9,14 @@ app.get("/", (req, res) => {
 });
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "http://localhost:3002"],
     credentials: true,
   }),
 );
 app.use(express.json());
 app.use("/api", require("./Routes/Createuser"));
 app.use("/api", require("./Routes/DisplayData"));
+app.use("/api", require("./Routes/Orderdata"));
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
